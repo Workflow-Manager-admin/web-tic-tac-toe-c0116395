@@ -1,104 +1,188 @@
-/* CSS Variables for Theme Management */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
+  /* Minimal Tic Tac Toe Theme */
+  --primary: #2196F3;
+  --accent: #FFC107;
+  --secondary: #F44336;
+  --ttt-bg: #fff;
+  --ttt-board-bg: #f7fafc;
+  --ttt-cell-border: #ddd;
+  --ttt-status-text: #222;
+  --ttt-win-bg: #e6f7ff;
+  --ttt-draw-bg: #f9f9f9;
+  --ttt-cell-size: min(6.5vw, 80px);
 }
 
-[data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
-}
-
-.App {
-  text-align: center;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+/* Main App Background */
+.ttt-app-bg {
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background: var(--ttt-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: var(--bg-secondary);
-  min-height: 100vh;
+.ttt-container {
+  background: var(--ttt-bg);
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(33,150,243,0.10), 0 1.5px 8px rgba(33,150,243,0.04);
+  padding: 2.5rem 2rem 2rem 2rem;
+  margin: 2rem 0;
+  min-width: 320px;
+  max-width: 96vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
-  position: relative;
 }
 
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+.ttt-title {
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: .04em;
+  margin-bottom: 1.2rem;
+  font-size: 2.2rem;
 }
 
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
+.ttt-status {
+  margin-bottom: 1.3rem;
+  color: var(--ttt-status-text);
+  font-size: 1.15rem;
   font-weight: 600;
+  letter-spacing: .02em;
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  background: #f4f8fa;
+  box-shadow: 0 1px 8px 1px rgba(33,150,243,0.03);
+  transition: background 0.2s;
+}
+.ttt-status[data-status="winner"] {
+  color: var(--secondary);
+  background: #fff9f9;
+}
+
+.ttt-status[data-status="draw"] {
+  color: var(--accent);
+  background: #fffde9;
+}
+
+.ttt-board {
+  display: grid;
+  grid-template-columns: repeat(3, var(--ttt-cell-size));
+  grid-template-rows: repeat(3, var(--ttt-cell-size));
+  gap: 0.6rem;
+  background: var(--ttt-board-bg);
+  padding: 1.1rem;
+  border-radius: 12px;
+  margin-bottom: 1.6rem;
+  box-shadow: 0 0.5px 2px rgba(33,150,243,0.04);
+  transition: box-shadow 0.15s;
+  justify-content: center;
+  align-items: center;
+}
+
+.ttt-cell {
+  background: #fff;
+  border: 2px solid var(--ttt-cell-border);
+  border-radius: 10px;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: var(--primary);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: border-color 0.18s, background 0.18s, color 0.12s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--ttt-cell-size);
+  height: var(--ttt-cell-size);
+  user-select: none;
+  box-shadow: 0 0.5px 3px rgba(33,150,243,0.06);
+  will-change: transform, box-shadow;
+  position: relative;
+  animation: ttt-cell-fadein 0.22s;
 }
 
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
+@keyframes ttt-cell-fadein {
+  from { opacity: 0; transform: scale(1.08);}
+  to   { opacity: 1; transform: scale(1);}
 }
 
-.theme-toggle:active {
-  transform: translateY(0);
+.ttt-cell:active:not(.occupied):not(:disabled) {
+  background: #eef7ff;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.ttt-cell.occupied {
+  cursor: default;
+  color: var(--primary);
+  background: #fff;
+}
+
+.ttt-cell .ttt-mark-X {
+  color: var(--primary);
+  text-shadow: 0 2px 8px #e3f0fb66;
+}
+.ttt-cell .ttt-mark-O {
+  color: var(--secondary);
+  text-shadow: 0 2px 8px #fbe6e6cc;
+}
+.ttt-cell .ttt-mark-null {
+  color: #dddddd;
+}
+.ttt-cell-win {
+  background: var(--accent) !important;
+  color: #fff !important;
+  border-color: var(--primary);
+  box-shadow: 0 4px 16px 0 #ffe9a726, 0 1.5px 3px #2196f32a;
+  z-index: 3;
+  animation: ttt-pop 0.35s cubic-bezier(.26,.81,.31,1.13) alternate;
+}
+@keyframes ttt-pop {
+  0% { background: var(--accent); transform: scale(1.00);}
+  30% { background: var(--accent); transform: scale(1.1);}
+  65% { background: var(--accent); transform: scale(0.96);}
+  100% { background: var(--accent); transform: scale(1.04);}
+}
+
+.ttt-restart {
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.7em 2.4em;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  box-shadow: 0 1px 7px #2196f329;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.7em;
+  transition: background 0.14s, box-shadow 0.22s;
+  letter-spacing: 0.03em;
+  outline: none;
+  appearance: none;
+}
+.ttt-restart:hover,
+.ttt-restart:active {
+  background: #1976d2;
+  box-shadow: 0 4px 16px #2196f378, 0 2.5px 6px #2196f31c;
+}
+
+.ttt-footer {
+  margin-top: 1.5em;
+  color: #adb5bd;
+  font-size: 0.98em;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --ttt-cell-size: min(16vw, 54px);
   }
-  to {
-    transform: rotate(360deg);
+  .ttt-container {
+    padding: 1rem 0.2rem 1.2rem 0.2rem;
+    min-width: unset;
   }
-}
-
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
+  .ttt-title {
+    font-size: 1.5rem;
+  }
+  .ttt-status {
+    font-size: 0.98rem;
+    padding: 0.45em 0.7em;
   }
 }
